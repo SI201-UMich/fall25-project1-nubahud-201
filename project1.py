@@ -4,7 +4,7 @@
 # Your email: nubahud@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT): ChatGPT
 # If you worked with generative AI also add a statement for how you used it.  
-# Asked Chatgpt hints on creating test cases using a large dataset in a csv file with unittest
+# Asked Chatgpt hints on creating test cases using a large dataset in a csv file with unittest and species_bill_length function
 
 import os
 import csv
@@ -88,7 +88,15 @@ class Project_1:
         OUTPUT: each species minimum bill length for a specific year (dictionary)
 
         """
-        pass
+        year_bill = self.species_bill_length(int(year))
+        min_bill = {}
+        for species, lengths in year_bill.items():
+            if not lengths:
+                continue
+            smallest_length = float(min(lengths))
+            min_bill[species] = smallest_length
+        return min_bill
+        
     def avg_bill_length_island(self, island):
         """
         Find the average bill length for each species on an island
@@ -96,9 +104,17 @@ class Project_1:
         OUTPUT: each species minimum bill length for a specific island (dictionary)
 
         """
+
         pass
+
     
     def show_results(self):
+        """
+        Writes the calculated penguin species and bill length results based on a year or an island
+        INPUT: calculation (dictionary)
+        OUTPUT: None (outputs to a file)
+        """
+
         pass
 
 
@@ -115,11 +131,13 @@ class TestAllMethods(unittest.TestCase):
         expected = {'Adelie':[39.6], 'Gentoo': [42.9, 51.5]}
         self.assertEqual(result, expected)
 
+    #do i need to do test cases for my other function apart from my calculations functions?
+
     def test_min_bill_length(self):
-        min_bill = self.penguins.min_bill_length_dict('2007')
-        expected_min = {'Adelie': 36.6, 'Gentoo': 42.9, 'Chinstrap': 50.2}
-        self.assertEqual(min_bill, expected_min)
-    
+        year_min_bill = self.penguins.min_bill_length_dict('2007')
+        year_expected_min = {'Adelie': 36.6, 'Gentoo': 42.9}
+        self.assertEqual(year_min_bill, year_expected_min)
+
     def test_avg_bill_length(self):
         avg_bill = self.penguins.avg_bill_length_island('Biscoe')
         expected_avg = {'Adelie': 39.6, 'Gentoo': 47.2}
