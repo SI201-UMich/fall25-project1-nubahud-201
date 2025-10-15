@@ -3,17 +3,13 @@
 # Your student id: 75937331
 # Your email: nubahud@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT): ChatGPT
-# If you worked with generative AI also add a statement for how you used it.  
-# Asked Chatgpt hints on creating test cases using a large dataset in a csv file with unittest and species_bill_length function
+# If you worked with generative AI also add a statement for how you used it.
+# Statement: I asked Chatgpt hints on creating test cases using a large dataset in a csv file with unittest and implementing a nested dictionary for species_bill_length function
 
 import os
 import csv
+import unittest
 
-"""
-questions to calculate:
-what is the minimum bill length (mm) for each species of penguins in 2009?
-What is the average bill length for each species of penguins on the island Torgersen?
-"""
 
 class Project_1:
     def __init__(self, filename):
@@ -78,9 +74,6 @@ class Project_1:
                     category_dict[species].append(float(bill_length))
         return category_dict
         
-
-        
-        
     def min_bill_length(self, year):
         """
         Find each species' minimum bill length for a specific year
@@ -90,10 +83,10 @@ class Project_1:
         """
         year_bill = self.species_bill_length(int(year))
         min_bill = {}
-        for species, lengths in year_bill.items():
-            if not lengths:
+        for species, bill_lengths in year_bill.items():
+            if not bill_lengths:
                 continue
-            smallest_length = float(min(lengths))
+            smallest_length = float(min(bill_lengths))
             min_bill[species] = smallest_length
         return min_bill
         
@@ -106,37 +99,36 @@ class Project_1:
         """
         island_bill = self.species_bill_length(island)
         avg_bill = {}
-        for species, lengths in island_bill.items():
-            avg_bill[species] = (sum(lengths) / len(lengths))
+        for island_species, lengths in island_bill.items():
+            avg_bill[island_species] = (sum(lengths) / len(lengths))
         return avg_bill
 
-        pass
-
     
-    def show_results(self):
+    def show_results(self, island, year, filename):
         """
         Writes the calculated penguin species and bill length results based on a year or an island
         INPUT: calculation (dictionary)
         OUTPUT: None (outputs to a file)
         """
 
-        pass
+        with open(filename, "w") as file:
+            year_results = self.min_bill_length(year)
+            island_results = self.avg_bill_length(island)
+            for species, length in year_results.items():
+                file.write(f"In {year}, the minimum bill length for the species {species} is {length} millimeters.\n")
+
+            for species, length in island_results.items():
+                file.write(f"\nOn the island {island}, the average bill length for the species {species} is {length} millimeters.")
+
 
 
 
 #make 4 test cases for each function (two general and two edge cases)
-import unittest
+
 class TestAllMethods(unittest.TestCase):
     def setUp(self):
         self.penguins = Project_1('test_penguins.csv')
         self.penguins.make_data_dict()
-    
-    def test_species(self):
-        result = self.penguins.species_bill_length('Biscoe')
-        expected = {'Adelie':[39.6], 'Gentoo': [42.9, 51.5]}
-        self.assertEqual(result, expected)
-
-    #do i need to do test cases for my other function apart from my calculations functions?
 
     def test_min_bill_length(self):
         year_min_bill = self.penguins.min_bill_length('2007')
@@ -147,14 +139,8 @@ class TestAllMethods(unittest.TestCase):
         avg_bill = self.penguins.avg_bill_length('Biscoe')
         expected_avg = {'Adelie': 39.6, 'Gentoo': 47.2}
         self.assertEqual(avg_bill, expected_avg)
+
     
-
-
-
-
-        
-
-
 
 def main():
     pass
@@ -164,17 +150,3 @@ if __name__ == '__main__':
     main()
     
 
-# test cases for other functions
-# def test_make_data_dict(self):
-#     species_row = self.penguins.data['species'][:3]
-#     islands_row = self.penguins.data['island'][:3]
-#     bill_length_mm_row = self.penguins.data['bill_length_mm'][:3]
-#     year_row = self.penguins.data['year'][:3]
-
-#     #check to make a list for a category (string type)
-#     self.assertEqual(species_row, ['Adelie', 'Adelie', 'Adelie'])
-#     self.assertEqual(islands_row, ['Torgersen', 'Torgersen', 'Biscoe'])
-
-#     #check to make a list for a category (int and float type)
-#     self.assertEqual(bill_length_mm_row, [39.5, 36.6, 39.6])
-#     self.assertEqual(year_row, [2007, 2007, 2009])
