@@ -81,7 +81,7 @@ class Project_1:
 
         
         
-    def min_bill_length_dict(self, year):
+    def min_bill_length(self, year):
         """
         Find each species' minimum bill length for a specific year
         INPUT: Year (string)
@@ -97,13 +97,18 @@ class Project_1:
             min_bill[species] = smallest_length
         return min_bill
         
-    def avg_bill_length_island(self, island):
+    def avg_bill_length(self, island):
         """
         Find the average bill length for each species on an island
         INPUT: Island (string)
         OUTPUT: each species minimum bill length for a specific island (dictionary)
 
         """
+        island_bill = self.species_bill_length(island)
+        avg_bill = {}
+        for species, lengths in island_bill.items():
+            avg_bill[species] = (sum(lengths) / len(lengths))
+        return avg_bill
 
         pass
 
@@ -134,12 +139,12 @@ class TestAllMethods(unittest.TestCase):
     #do i need to do test cases for my other function apart from my calculations functions?
 
     def test_min_bill_length(self):
-        year_min_bill = self.penguins.min_bill_length_dict('2007')
+        year_min_bill = self.penguins.min_bill_length('2007')
         year_expected_min = {'Adelie': 36.6, 'Gentoo': 42.9}
         self.assertEqual(year_min_bill, year_expected_min)
 
     def test_avg_bill_length(self):
-        avg_bill = self.penguins.avg_bill_length_island('Biscoe')
+        avg_bill = self.penguins.avg_bill_length('Biscoe')
         expected_avg = {'Adelie': 39.6, 'Gentoo': 47.2}
         self.assertEqual(avg_bill, expected_avg)
     
