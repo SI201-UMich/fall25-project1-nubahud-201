@@ -1,0 +1,10 @@
+"","species","island","bill_length_mm","bill_depth_mm","flipper_length_mm","body_mass_g","sex","year"
+"2","Adelie","Torgersen",39.5,17.4,186,3800,"female",2007
+"9","Adelie","Torgersen",34.1,18.1,193,3475,NA,2007
+"16","Adelie","Torgersen",36.6,17.8,185,3700,"female",2007
+"115","Adelie","Biscoe",39.6,20.7,191,3900,"female",2009
+"134","Adelie","Dream",37.5,18.5,199,4475,"male",2009
+"145","Adelie","Dream",37.3,16.8,192,3000,"female",2009
+"177","Gentoo","Biscoe",42.9,13.1,215,5000,"female",2007
+"266","Gentoo","Biscoe",51.5,16.3,230,5500,"male",2009
+"344","Chinstrap","Dream",50.2,18.7,198,3775,"female",2009
