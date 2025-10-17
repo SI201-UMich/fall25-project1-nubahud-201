@@ -4,7 +4,8 @@
 # Your email: nubahud@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT): ChatGPT
 # If you worked with generative AI also add a statement for how you used it.
-# Statement: I asked Chatgpt hints on creating test cases using a large dataset in a csv file with unittest and implementing a nested dictionary for species_bill_length function
+# Statement: I asked ChatGPT hints on creating test cases using a large dataset in a csv file with unittest, implementing a dictionary to map the species to their bill lengths according 
+# to a category for species_bill_length function, and how to skip null values in a dataset
 
 import os
 import csv
@@ -81,7 +82,8 @@ class Project_1:
         OUTPUT: each species minimum bill length for a specific year (dictionary)
 
         """
-        year_bill = self.species_bill_length(int(year))
+
+        year_bill = self.species_bill_length(int(year.strip(' "')))
         min_bill = {}
         for species, bill_lengths in year_bill.items():
             if not bill_lengths:
@@ -93,11 +95,11 @@ class Project_1:
     def avg_bill_length(self, island):
         """
         Find the average bill length for each species on an island
-        INPUT: Island (string)
+        INPUT: island (string)
         OUTPUT: each species minimum bill length for a specific island (dictionary)
 
         """
-        island_bill = self.species_bill_length(island)
+        island_bill = self.species_bill_length(island.strip(' "').title())
         avg_bill = {}
         for island_species, lengths in island_bill.items():
             avg_bill[island_species] = (sum(lengths) / len(lengths))
@@ -107,23 +109,20 @@ class Project_1:
     def show_results(self, island, year, filename):
         """
         Writes the calculated penguin species and bill length results based on a year or an island
-        INPUT: calculation (dictionary)
+        INPUT: island (string), year (string), filename (string)
         OUTPUT: None (outputs to a file)
         """
 
         with open(filename, "w") as file:
             year_results = self.min_bill_length(year)
             island_results = self.avg_bill_length(island)
-            for species, length in year_results.items():
-                file.write(f"In {year}, the minimum bill length for the species {species} is {length} millimeters.\n")
+            for year_species, year_length in year_results.items():
+                file.write(f"In {year}, the minimum bill length for the species {year_species} is {year_length} millimeters.\n")
 
-            for species, length in island_results.items():
-                file.write(f"\nOn the island {island}, the average bill length for the species {species} is {length} millimeters.")
-
-
+            for species_island, length_island in island_results.items():
+                file.write(f"\nOn the island {island}, the average bill length for the species {species_island} is {length_island} millimeters.")
 
 
-#make 4 test cases for each function (two general and two edge cases)
 
 class TestAllMethods(unittest.TestCase):
     def setUp(self):
@@ -131,22 +130,68 @@ class TestAllMethods(unittest.TestCase):
         self.penguins.make_data_dict()
 
     def test_min_bill_length(self):
-        year_min_bill = self.penguins.min_bill_length('2007')
-        year_expected_min = {'Adelie': 36.6, 'Gentoo': 42.9}
-        self.assertEqual(year_min_bill, year_expected_min)
+        #general cases for min_bill_length
+        test_year1 = '2007'
+        year_min_bill_1 = self.penguins.min_bill_length(test_year1)
+        year_expected_min_1 = {'Adelie': 36.6, 'Gentoo': 42.932}
+        self.assertEqual(year_min_bill_1, year_expected_min_1)
+        
+        test_year2 = '2008'
+        year_min_bill_2 = self.penguins.min_bill_length(test_year2)
+        year_expected_min_2 = {'Adelie': 34.523, 'Gentoo': 43.6}
+        self.assertEqual(year_min_bill_2, year_expected_min_2)
+
+        #edge cases for min_bill_length
+        expected_empty = {}
+
+        invalid_year1 = "0"
+        actual_empty_dict1 = self.penguins.min_bill_length(invalid_year1)
+        self.assertEqual(actual_empty_dict1, expected_empty)
+
+        invalid_year2 = "-2034"
+        actual_empty_dict2 = self.penguins.min_bill_length(invalid_year2)
+        self.assertEqual(actual_empty_dict2, expected_empty)
+
+        weird_format_year = ' "  2007" '
+        weird_min_bill = self.penguins.min_bill_length(weird_format_year)
+        weird_expected_min = {'Adelie': 36.6, 'Gentoo': 42.932}
+        self.assertEqual(weird_min_bill, weird_expected_min)
 
     def test_avg_bill_length(self):
-        avg_bill = self.penguins.avg_bill_length('Biscoe')
-        expected_avg = {'Adelie': 39.6, 'Gentoo': 47.2}
-        self.assertEqual(avg_bill, expected_avg)
+        #general cases for avg_bill_length
+        avg_island1 = 'Biscoe'
+        avg_bill_length_1 = self.penguins.avg_bill_length(avg_island1)
+        expected_avg1 = {'Adelie': 34.523, 'Gentoo': 45.758}
+        self.assertEqual(avg_bill_length_1, expected_avg1)
 
-    
+        avg_island2 = 'Dream'
+        avg_bill_length_2 = self.penguins.avg_bill_length(avg_island2)
+        expected_avg2 = {'Adelie': 37.5, 'Chinstrap': 50.866}
+        self.assertEqual(avg_bill_length_2, expected_avg2)
+
+        #edge cases for avg_bill_length
+
+        invalid_island = 'Biscoe123'
+        invalid_avg = self.penguins.avg_bill_length(invalid_island)
+        expected_invalid = {}
+        self.assertEqual(invalid_avg, expected_invalid)
+
+        weird_format_island = '   dReAm'
+        weird_island_avg = self.penguins.avg_bill_length(weird_format_island)
+        weird_island_expected = {'Adelie': 37.5, 'Chinstrap': 50.866}
+        self.assertEqual(weird_island_avg, weird_island_expected)
+
+
+
 
 def main():
-    pass
+    penguins = Project_1("penguins.csv")   
+    penguins.make_data_dict()              
+    penguins.show_results("Dream", "2009", "results.txt")
 
 if __name__ == '__main__':
-    unittest.main(verbosity=2)
     main()
+    unittest.main(verbosity=2)
+    
     
 
